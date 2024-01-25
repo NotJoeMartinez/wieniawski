@@ -100,10 +100,12 @@ def get_chord_notation(chord_list):
 
 
 def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, imgs_rows):
+
     black_names = ['4', '8', '8_b_n', '8_b_r', '16', '16_b_n', '16_b_r',
                    '32', '32_b_n', '32_b_r', 'a_4', 'a_8', 'a_16', 'a_32', 'chord']
     ring_names = ['2', 'a_2']
     whole_names = ['1', 'a_1']
+
     disk_size = most_common / 4
 
     if len(coord_imgs) > 1:
@@ -122,6 +124,7 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, 
                 np.abs(most_common-imgs_spacing[i])))
             saved_img = (255*(1 - prim)).astype(np.uint8)
             labels = predict(saved_img)
+            print(f"Predicted labels: {labels}")
             octave = None
             label = labels[0]
             if label in black_names:
@@ -211,10 +214,13 @@ def predict_dir(input_path, output_path):
     for img_path in imgs_path:
         img_name = img_path.split('/')[-1].split('.')[0]
         out_file = open(f'{output_path}/{img_name}.txt', "w")
-        print(f"Processing new image {img_name}...")
+
+        print(f"Processing new image {img_path}...")
+
         img = io.imread(img_path)
         img = gray_img(img)
         horizontal = IsHorizontal(img)
+
         if horizontal == False:
             theta = deskew(img)
             img = rotation(img, theta)
@@ -249,3 +255,49 @@ def predict_dir(input_path, output_path):
         out_file.close()
         print("Done...")
 
+
+# def predict_img(img_path):
+
+#     img_name = img_path.split('/')[-1].split('.')[0]
+
+#     out_file = open(f'{output_path}/{img_name}.txt', "w")
+
+#     print(f"Processing new image {img_path}...")
+
+#     img = io.imread(img_path)
+#     img = gray_img(img)
+#     horizontal = IsHorizontal(img)
+
+#     if horizontal == False:
+#         theta = deskew(img)
+#         img = rotation(img, theta)
+#         img = get_gray(img)
+#         img = get_thresholded(img, threshold_otsu(img))
+#         img = get_closer(img)
+#         horizontal = IsHorizontal(img)
+
+#     original = img.copy()
+#     # gray = get_gray(img)
+#     gray = img 
+#     bin_img = get_thresholded(gray, threshold_otsu(gray))
+
+#     segmenter = Segmenter(bin_img)
+#     imgs_with_staff = segmenter.regions_with_staff
+#     most_common = segmenter.most_common
+
+#     # imgs_without_staff = segmenter.regions_without_staff
+
+#     imgs_spacing = []
+#     imgs_rows = []
+#     coord_imgs = []
+#     for i, img in enumerate(imgs_with_staff):
+#         spacing, rows, no_staff_img = coordinator(img, horizontal)
+#         imgs_rows.append(rows)
+#         imgs_spacing.append(spacing)
+#         coord_imgs.append(no_staff_img)
+
+#     print("Recognize...")
+#     recognize(out_file, most_common, coord_imgs,
+#                 imgs_with_staff, imgs_spacing, imgs_rows)
+#     out_file.close()
+#     print("Done...")
