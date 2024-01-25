@@ -5,6 +5,8 @@ from .train_model import *
 import os
 import pickle
 
+import matplotlib.pyplot as plt
+
 def predict(img):
     model_file = os.getenv("DEFAULT_MODEL")
     if not os.path.exists(model_file):
@@ -15,10 +17,9 @@ def predict(img):
     features = extract_features(img, 'hog')
     labels = model.predict([features])
 
+    # plt.imshow(img)
+    # plt.title(f"Predicted labels: {labels}")
+    # plt.show()
+
     return labels
 
-
-# if __name__ == "__main__":
-#     img = cv2.imread('testresult/0_6.png')
-#     labels = predict(img)
-#     print(labels)

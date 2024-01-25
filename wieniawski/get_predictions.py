@@ -9,7 +9,7 @@ import cv2
 import pickle
 from scipy.ndimage import binary_fill_holes
 from skimage.morphology import thin
-import argparse
+import matplotlib.pyplot as plt
 
 label_map = {
     0: {
@@ -99,7 +99,7 @@ def get_chord_notation(chord_list):
     return chord_res
 
 
-def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, imgs_rows):
+def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, imgs_rows, og_img):
 
     black_names = ['4', '8', '8_b_n', '8_b_r', '16', '16_b_n', '16_b_r',
                    '32', '32_b_n', '32_b_r', 'a_4', 'a_8', 'a_16', 'a_32', 'chord']
@@ -206,6 +206,11 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, 
 
     if len(coord_imgs) > 1:
         out_file.write("}")
+
+    plt.imshow(og_img)
+    plt.title(f"Predicted labels: {res}")
+    plt.show()
+
     print("###########################", res, "##########################")
 
 
@@ -251,53 +256,8 @@ def predict_dir(input_path, output_path):
 
         print("Recognize...")
         recognize(out_file, most_common, coord_imgs,
-                  imgs_with_staff, imgs_spacing, imgs_rows)
+                                imgs_with_staff, imgs_spacing, imgs_rows, gray)
+
+
         out_file.close()
         print("Done...")
-
-
-# def predict_img(img_path):
-
-#     img_name = img_path.split('/')[-1].split('.')[0]
-
-#     out_file = open(f'{output_path}/{img_name}.txt', "w")
-
-#     print(f"Processing new image {img_path}...")
-
-#     img = io.imread(img_path)
-#     img = gray_img(img)
-#     horizontal = IsHorizontal(img)
-
-#     if horizontal == False:
-#         theta = deskew(img)
-#         img = rotation(img, theta)
-#         img = get_gray(img)
-#         img = get_thresholded(img, threshold_otsu(img))
-#         img = get_closer(img)
-#         horizontal = IsHorizontal(img)
-
-#     original = img.copy()
-#     # gray = get_gray(img)
-#     gray = img 
-#     bin_img = get_thresholded(gray, threshold_otsu(gray))
-
-#     segmenter = Segmenter(bin_img)
-#     imgs_with_staff = segmenter.regions_with_staff
-#     most_common = segmenter.most_common
-
-#     # imgs_without_staff = segmenter.regions_without_staff
-
-#     imgs_spacing = []
-#     imgs_rows = []
-#     coord_imgs = []
-#     for i, img in enumerate(imgs_with_staff):
-#         spacing, rows, no_staff_img = coordinator(img, horizontal)
-#         imgs_rows.append(rows)
-#         imgs_spacing.append(spacing)
-#         coord_imgs.append(no_staff_img)
-
-#     print("Recognize...")
-#     recognize(out_file, most_common, coord_imgs,
-#                 imgs_with_staff, imgs_spacing, imgs_rows)
-#     out_file.close()
-#     print("Done...")
