@@ -5,13 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: wski",
+            "name": "suzuki_1.png",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/.venv/bin/wski",
             "console": "integratedTerminal",
-            "args": ["predict", "--file", "data/testing_data/suzuki_1.png"], 
+            "args": ["predict", "--path", "data/testing_data/suzuki_1.png"], 
             "python": "${workspaceFolder}/.venv/bin/python" 
         },
+        {
+            "name": "happy_birthday.png",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/.venv/bin/wski",
+            "console": "integratedTerminal",
+            "args": ["predict", "--path", "data/testing_data/happy_birthday.png"], 
+            "python": "${workspaceFolder}/.venv/bin/python" 
+        },
+        {
+            "name": "02_multi_staff.PNG",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/.venv/bin/wski",
+            "console": "integratedTerminal",
+            "args": ["predict", "--path", "data/testing_data/02_multi_staff.PNG"], 
+            "python": "${workspaceFolder}/.venv/bin/python" 
+        },
+        
     ]
 }

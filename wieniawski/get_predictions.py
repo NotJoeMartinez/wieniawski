@@ -221,54 +221,6 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, 
     print("###########################", res, "##########################")
 
 
-# def predict_dir(input_path, output_path):
-#     imgs_path = sorted(glob(f'{input_path}/*'))
-#     for img_path in imgs_path:
-#         img_name = img_path.split('/')[-1].split('.')[0]
-#         out_file = open(f'{output_path}/{img_name}.txt', "w")
-
-#         print(f"Processing new image {img_path}...")
-
-#         img = io.imread(img_path)
-#         img = gray_img(img)
-#         horizontal = IsHorizontal(img)
-
-#         if horizontal == False:
-#             print("horizontal before make_image_horizontal: ", horizontal)
-#             img = make_image_horizontal(img)
-#             horizontal = IsHorizontal(img)
-#             print("horizontal after make_image_horizontal: ", horizontal)
-
-#         original = img.copy()
-#         # gray = get_gray(img)
-#         gray = img 
-#         bin_img = get_thresholded(gray, threshold_otsu(gray))
-
-#         segmenter = Segmenter(bin_img)
-#         imgs_with_staff = segmenter.regions_with_staff
-#         most_common = segmenter.most_common
-
-#         # imgs_without_staff = segmenter.regions_without_staff
-
-#         imgs_spacing = []
-#         imgs_rows = []
-#         coord_imgs = []
-#         for i, img in enumerate(imgs_with_staff):
-#             spacing, rows, no_staff_img = coordinator(img, horizontal)
-#             imgs_rows.append(rows)
-#             imgs_spacing.append(spacing)
-#             coord_imgs.append(no_staff_img)
-
-#         print("Recognize...")
-
-#         recognize(out_file, most_common, coord_imgs,
-#                   imgs_with_staff, imgs_spacing, imgs_rows, gray)
-
-
-#         out_file.close()
-#         print("Done...")
-
-
 
 def predict_file(input_path, output_path):
     img_name = input_path.split('/')[-1].split('.')[0]
@@ -277,20 +229,10 @@ def predict_file(input_path, output_path):
     print(f"Processing new image {input_path}...")
 
     img = io.imread(input_path)
-    print(f"type(img): {type(img)}")
     img = gray_img(img)
-    horizontal = IsHorizontal(img)
 
-    print("horizontal: ", horizontal)
-
-    if horizontal == False:
-        img = make_image_horizontal(img)
-
-        # why not just set horizontal to True?
-        # this doesn't garantee that the image is horizontal
-        horizontal = IsHorizontal(img)
-        
-        print("horizontal after make_image_horizontal: ", horizontal)
+    # horizontal = IsHorizontal(img)
+    horizontal = True 
 
     original = img.copy()
 
@@ -301,15 +243,14 @@ def predict_file(input_path, output_path):
     imgs_with_staff = segmenter.regions_with_staff
     most_common = segmenter.most_common
 
-    # imgs_without_staff = segmenter.regions_without_staff
+    print("most common: ", most_common)
+    print(f"type: {type(most_common)}")
 
     imgs_spacing = []
     imgs_rows = []
     coord_imgs = []
     for i, img in enumerate(imgs_with_staff):
-
         spacing, rows, no_staff_img = coordinator(img, horizontal)
-
         imgs_rows.append(rows)
         imgs_spacing.append(spacing)
         coord_imgs.append(no_staff_img)
