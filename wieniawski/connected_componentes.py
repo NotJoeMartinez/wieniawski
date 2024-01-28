@@ -1,6 +1,6 @@
-from .commonfunctions import *
 from skimage.measure import label, regionprops
 from skimage.color import label2rgb
+from .commonfunctions import *
 from .box import Box
 
 

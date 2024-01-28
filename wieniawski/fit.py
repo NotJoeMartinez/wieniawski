@@ -1,9 +1,9 @@
+import os
+import pickle
 import cv2
 import numpy as np
 from .box import Box
 from .train_model import *
-import os
-import pickle
 
 import matplotlib.pyplot as plt
 

@@ -1,14 +1,15 @@
-import skimage.io as io
-import matplotlib.pyplot as plt
 import numpy as np
-from skimage.exposure import histogram
+import skimage.io as io
 from matplotlib.pyplot import bar
+import matplotlib.pyplot as plt
 from skimage.color import rgb2gray
-from skimage.filters import threshold_otsu, gaussian, median
-from skimage.morphology import binary_opening, binary_closing, binary_dilation, binary_erosion, closing, opening, square, skeletonize, disk
+from skimage.exposure import histogram
 from skimage.feature import canny
+from skimage.filters import gaussian, median, threshold_otsu
+from skimage.morphology import (binary_closing, binary_dilation, binary_erosion,
+                                binary_opening, closing, disk, opening,
+                                skeletonize, square)
 from skimage.transform import resize
-
 
 def show_images(images, titles=None):
     n_ims = len(images)

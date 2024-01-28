@@ -21,4 +21,3 @@ scipy==1.12.0
 six==1.16.0
 threadpoolctl==3.2.0
 tifffile==2023.12.9
--e git+https://github.com/NotJoeMartinez/wieniawski.git@06dd4a33e5d47e2be0054c7e587e666e6871f5a6#egg=wieniawski

@@ -1,4 +1,3 @@
-
 from cv2 import imread
 import matplotlib.pyplot as plt
 

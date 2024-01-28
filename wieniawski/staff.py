@@ -1,6 +1,6 @@
+from collections import Counter
 from .rle import *
 from .commonfunctions import *
-from collections import Counter
 
 
 row_percentage = 0.3

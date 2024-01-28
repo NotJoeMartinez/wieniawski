@@ -1,15 +1,19 @@
+import cv2
+import pickle
+
+from glob import glob
+
+from scipy.ndimage import binary_fill_holes
+from skimage.morphology import thin
+import matplotlib.pyplot as plt
+
+
 from .commonfunctions import *
 from .pre_processing import *
 from .connected_componentes import *
 from .staff import calculate_thickness_spacing, remove_staff_lines, coordinator
 from .segmenter import Segmenter
 from .fit import predict
-from glob import glob
-import cv2
-import pickle
-from scipy.ndimage import binary_fill_holes
-from skimage.morphology import thin
-import matplotlib.pyplot as plt
 
 label_map = {
     0: {
@@ -103,6 +107,7 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, 
 
     black_names = ['4', '8', '8_b_n', '8_b_r', '16', '16_b_n', '16_b_r',
                    '32', '32_b_n', '32_b_r', 'a_4', 'a_8', 'a_16', 'a_32', 'chord']
+
     ring_names = ['2', 'a_2']
     whole_names = ['1', 'a_1']
 
@@ -118,6 +123,7 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff, imgs_spacing, 
 
         primitives, prim_with_staff, boundary = get_connected_components(
             img, imgs_with_staff[i])
+
 
         for j, prim in enumerate(primitives):
             prim = binary_opening(prim, square(
@@ -250,13 +256,15 @@ def predict_dir(input_path, output_path):
         coord_imgs = []
         for i, img in enumerate(imgs_with_staff):
             spacing, rows, no_staff_img = coordinator(img, horizontal)
+
             imgs_rows.append(rows)
             imgs_spacing.append(spacing)
             coord_imgs.append(no_staff_img)
 
         print("Recognize...")
+
         recognize(out_file, most_common, coord_imgs,
-                                imgs_with_staff, imgs_spacing, imgs_rows, gray)
+                  imgs_with_staff, imgs_spacing, imgs_rows, gray)
 
 
         out_file.close()

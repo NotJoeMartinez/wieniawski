@@ -1,17 +1,16 @@
 import os
 import cv2
 import random
-import imutils
-
+import pickle
 from pathlib import Path
 from glob import glob
+import imutils
+import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn import svm
-import numpy as np
-import matplotlib.pyplot as plt
-import pickle
 
 dataset_path = os.getenv("TRAIN_DATA_PATH") 
 target_img_size = (100, 100)

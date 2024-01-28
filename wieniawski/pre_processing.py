@@ -1,7 +1,7 @@
-from .commonfunctions import *
+import cv2
 from skimage.transform import probabilistic_hough_line, hough_line, rotate, hough_line_peaks
 from skimage.feature import corner_harris
-import cv2
+from .commonfunctions import *
 from .staff import *
 
 
