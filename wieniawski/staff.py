@@ -130,18 +130,17 @@ def coordinator(bin_img, horizontal):
         staff_lines = otsu(bin_img - no_staff_img)
         start = horizontal_projection(bin_img)
     else:
+
         no_staff_img = remove_staff_lines(rle, vals, thickness, bin_img.shape)
-        no_staff_img = binary_closing(
-            no_staff_img, np.ones((thickness+2, thickness+2)))
+        no_staff_img = binary_closing(no_staff_img, np.ones((thickness+2, thickness+2)))
         no_staff_img = median(no_staff_img)
-        no_staff_img = binary_opening(
-            no_staff_img, np.ones((thickness+2, thickness+2)))
+        no_staff_img = binary_opening(no_staff_img, np.ones((thickness+2, thickness+2)))
         staff_lines = otsu(bin_img - no_staff_img)
-        staff_lines = binary_erosion(
-            staff_lines, np.ones((thickness+2, thickness+2)))
+        staff_lines = binary_erosion(staff_lines, np.ones((thickness+2, thickness+2)))
         staff_lines = median(staff_lines, selem=square(21))
         start = get_staff_row_position(staff_lines)
-    staff_row_positions = get_rows(
-        start, most_common, thickness, spacing)
+
+    staff_row_positions = get_rows(start, most_common, thickness, spacing)
+
     staff_row_positions = [np.average(x) for x in staff_row_positions]
     return spacing, staff_row_positions, no_staff_img

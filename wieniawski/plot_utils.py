@@ -27,3 +27,18 @@ def show_og_overlayed(og_fname, ov_fname, res):
 
     plt.show()
 
+
+def plot_images(img1, img2):
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+    axs[0].imshow(img1, cmap='gray')
+    axs[0].set_title('Not Horizontal')
+
+    axs[1].imshow(img2, cmap='gray')
+    axs[1].set_title('Horizontal')
+
+    # Hide x labels and tick labels for top plots and y ticks for right plots.
+    for ax in axs.flat:
+        ax.label_outer()
+
+    plt.show()

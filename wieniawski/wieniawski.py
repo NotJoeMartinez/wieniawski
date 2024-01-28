@@ -33,14 +33,14 @@ def train(model_name):
 @click.option("--directory", "-d", help="Path to the directory")
 def predict(file, directory):
 
-    from .get_predictions import predict_dir
+    from .get_predictions import predict_dir, predict_file
 
     if file is None and directory is None:
         print("Please specify either file or directory")
         exit(1)
     
-    if file is not None: 
-        pass
+    if file is not None:
+        predict_file(file, os.getenv("TEST_OUTPUT_DIR"))
     
     if directory is not None:
         predict_dir(directory, os.getenv("TEST_OUTPUT_DIR"))

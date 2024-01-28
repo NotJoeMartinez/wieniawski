@@ -8,6 +8,7 @@ from skimage.morphology import thin
 import matplotlib.pyplot as plt
 
 
+from .plot_utils import *
 from .commonfunctions import *
 from .pre_processing import *
 from .connected_componentes import *
@@ -235,7 +236,6 @@ def predict_dir(input_path, output_path):
         if horizontal == False:
             theta = deskew(img)
             img = rotation(img, theta)
-            img = get_gray(img)
             img = get_thresholded(img, threshold_otsu(img))
             img = get_closer(img)
             horizontal = IsHorizontal(img)
@@ -269,3 +269,61 @@ def predict_dir(input_path, output_path):
 
         out_file.close()
         print("Done...")
+
+
+
+def predict_file(input_path, output_path):
+    img_name = input_path.split('/')[-1].split('.')[0]
+    out_file = open(f'{output_path}/{img_name}.txt', "w")
+
+    print(f"Processing new image {input_path}...")
+
+    img = io.imread(input_path)
+    img = gray_img(img)
+    horizontal = IsHorizontal(img)
+
+    if horizontal == False:
+        
+        tmp = img.copy()
+
+        theta = deskew(img)
+        img = rotation(img, theta)
+        img = get_thresholded(img, threshold_otsu(img))
+        img = get_closer(img)
+
+        # why not just set horizontal to True?
+        # this doesn't garantee that the image is horizontal
+
+        plot_images(tmp, img)
+
+        horizontal = IsHorizontal(img)
+
+    original = img.copy()
+
+    gray = img 
+    bin_img = get_thresholded(gray, threshold_otsu(gray))
+
+    segmenter = Segmenter(bin_img)
+    imgs_with_staff = segmenter.regions_with_staff
+    most_common = segmenter.most_common
+
+    # imgs_without_staff = segmenter.regions_without_staff
+
+    imgs_spacing = []
+    imgs_rows = []
+    coord_imgs = []
+    for i, img in enumerate(imgs_with_staff):
+        spacing, rows, no_staff_img = coordinator(img, horizontal)
+
+        imgs_rows.append(rows)
+        imgs_spacing.append(spacing)
+        coord_imgs.append(no_staff_img)
+
+    print("Recognize...")
+
+    recognize(out_file, most_common, coord_imgs,
+                imgs_with_staff, imgs_spacing, imgs_rows, gray)
+
+
+    out_file.close()
+    print("Done...")
