@@ -1,4 +1,7 @@
 import cv2
+
+import numpy as np
+
 from skimage.transform import probabilistic_hough_line, hough_line, rotate, hough_line_peaks
 from skimage.feature import corner_harris
 from .commonfunctions import *
@@ -12,8 +15,10 @@ def deskew(image):
     h, theta, d = hough_line(harris, theta=tested_angles)
     out, angles, d = hough_line_peaks(h, theta, d)
     rotation_number = np.average(np.degrees(angles))
+
     if rotation_number < 45 and rotation_number != 0:
         rotation_number += 90
+
     return rotation_number
 
 
@@ -46,7 +51,7 @@ def get_closer(img):
     return new_img
 
 
-def IsHorizontal(img):
+def IsHorizontal(img: np.ndarray):
     projected = []
     rows, cols = img.shape
     for i in range(rows):
@@ -58,3 +63,11 @@ def IsHorizontal(img):
         if(proj_sum >= 0.9*cols):
             return True
     return False
+
+
+def make_image_horizontal(img):
+    theta = deskew(img)
+    img = rotation(img, theta)
+    img = get_thresholded(img, threshold_otsu(img))
+    img = get_closer(img)
+    return img

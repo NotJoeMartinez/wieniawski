@@ -125,6 +125,10 @@ def coordinator(bin_img, horizontal):
     most_common = get_most_common(rle)
     thickness, spacing = calculate_thickness_spacing(rle, most_common)
     start = 0
+
+    # what's the point of attempting to flip
+    # if we are still doing this in the end?
+
     if horizontal:
         no_staff_img = remove_staff_lines_2(thickness, bin_img)
         staff_lines = otsu(bin_img - no_staff_img)
