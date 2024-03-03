@@ -25,7 +25,10 @@ def extract_raw_pixels(img):
 def extract_hsv_histogram(img):
     resized = cv2.resize(img, target_img_size)
     hsv = cv2.cvtColor(resized, cv2.COLOR_BGR2HSV)
-    hist = cv2.calcHist([hsv], [0, 1, 2], None, [8, 8, 8],
+    hist = cv2.calcHist([hsv], 
+                        [0, 1, 2], 
+                        None, 
+                        [8, 8, 8],
                         [0, 180, 0, 256, 0, 256])
     if imutils.is_cv2():
         hist = cv2.normalize(hist)
@@ -61,19 +64,29 @@ def extract_features(img, feature_set='raw'):
 
 
 def load_dataset(feature_set='raw', dir_names=[]):
-    features = []
-    labels = []
+
+    features = [] # array of ndarrays of images?
+    labels = [] # directory names
     count = 0
+
     for dir_name in dir_names:
-        print(dir_name)
+
         imgs = glob(f'{dataset_path}/{dir_name}/*.png')
         count += len(imgs)
-        subset = random.sample([i for i in range(len(imgs))], min(len(imgs), sample_count))
+
+        # why do we need to shuffle the images?
+        subset = random.sample(
+            [i for i in range(len(imgs))], 
+            min(len(imgs), sample_count)
+            )
+
         for i in subset:
             img = cv2.imread(imgs[i])
             labels.append(dir_name)
             features.append(extract_features(img, feature_set))
+
     print(f'Total: {len(dir_names)} directories, and {count} images')
+
     return features, labels
 
 
@@ -85,7 +98,8 @@ def load_classifiers():
     classifiers = {
         'SVM': svm.LinearSVC(random_state=random_seed),
         'KNN': KNeighborsClassifier(n_neighbors=7),
-        'NN': MLPClassifier(activation='relu', hidden_layer_sizes=(200,),
+        'NN': MLPClassifier(activation='relu', 
+                            hidden_layer_sizes=(200,),
                             max_iter=10000, alpha=1e-4,
                             solver='adam', verbose=20,
                             tol=1e-8, random_state=1,
@@ -95,20 +109,31 @@ def load_classifiers():
     return classifiers, random_seed
 
 
-def run_experiment(classifier='SVM', feature_set='hog', dir_names=[]):
+def run_experiment(classifier='NN', feature_set='hog', dir_names=[]):
     print('Loading dataset. This will take time ...')
     features, labels = load_dataset(feature_set, dir_names)
     print('Finished loading dataset.')
-
+    # classifiers is an array of sklearn models
     classifiers, random_seed = load_classifiers()
 
     train_features, test_features, train_labels, test_labels = train_test_split(
-        features, labels, test_size=0.2, random_state=random_seed)
+        features, 
+        labels, 
+        test_size=0.2, 
+        random_state=random_seed)
 
+    print(classifiers)
+    print(type(classifiers))
+    print(classifier, type(classifier))
+    print(classifiers[classifier], type(classifiers[classifier]))
+
+    # sklearn.neural_network._multilayer_perceptron.MLPClassifier
     model = classifiers[classifier]
+
     print('############## Training', classifier, "##############")
     model.fit(train_features, train_labels)
     accuracy = model.score(test_features, test_labels)
+
     print(classifier, 'accuracy:', accuracy*100, '%')
 
     return model, accuracy
