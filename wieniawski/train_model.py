@@ -38,6 +38,7 @@ def extract_hsv_histogram(img):
 
 
 def extract_hog_features(img):
+    print(f"extract_hog_features: img.shape: {img.shape} ")
     img = cv2.resize(img, target_img_size)
     win_size = (100, 100)
     cell_size = (4, 4)
@@ -45,10 +46,35 @@ def extract_hog_features(img):
 
     block_size = (block_size_in_cells[1] * cell_size[1],
                   block_size_in_cells[0] * cell_size[0])
+
     block_stride = (cell_size[1], cell_size[0])
+
     nbins = 9  # Number of orientation bins
-    hog = cv2.HOGDescriptor(win_size, block_size,
-                            block_stride, cell_size, nbins)
+
+    
+    """
+    win_size: Size of detection window in pixels (width, height). 
+    Defines the region of interest. 
+
+    block_size: Block size in pixels (width, height). Defines how 
+    many cells are in each block.
+
+    block_stride: Block stride in pixels (horizontal, vertical). 
+    defines the distance between adjecent blocks.
+
+    cell_size: Cell size in pixels (width, height). Determines the 
+    size fo your cell
+
+    nbins: Number of bins for the histograms. Determines the number 
+    of angular bins used to make the histograms HOG uses unsigned 
+    gradients, so the angular bins will have values between 0 and 180 degrees
+    """
+
+    hog = cv2.HOGDescriptor(win_size, 
+                            block_size,
+                            block_stride, 
+                            cell_size, 
+                            nbins)
     h = hog.compute(img)
     h = h.flatten()
     return h.flatten()
@@ -121,11 +147,6 @@ def run_experiment(classifier='NN', feature_set='hog', dir_names=[]):
         labels, 
         test_size=0.2, 
         random_state=random_seed)
-
-    print(classifiers)
-    print(type(classifiers))
-    print(classifier, type(classifier))
-    print(classifiers[classifier], type(classifiers[classifier]))
 
     # sklearn.neural_network._multilayer_perceptron.MLPClassifier
     model = classifiers[classifier]

@@ -59,3 +59,38 @@ We can simplify all this removing the dynamic parts.
 
 but something tells me I should at least try to use the other feature
 extractors and models to see how they do.
+
+
+## 2024-03-04T05-38-27Z
+
+my understanding of a histogram is just a "bar graph" of the frequency 
+of elements in an array. For a histogram of a collored image this 
+would be the counts of red, green and blue pixels in an image although
+I don't know at what threashold we count a pixel value to be red, green
+or blue. For this project we are not using a histogram of colored pixels,
+all of our dataset is grey scale and we convert images into greyscale 
+before getting predictions from the model. We can see that 
+our image is the return value of `extract_hsv_histogram()` which applies
+openCVs Histogram of Oriented Gradients method to it. A histogram 
+of of grey scale images is mesuring the **intencity** of a pixel on
+a scale from 0 to 255, rather than the color values. The "oriented"
+part has something to do with the direction the intensity flows from 
+one part to another pixel. I belive this has something to do with 
+finding edges of pixels in images but I don't understand the math 
+behind it (which involves some trig).  
+
+These are some images that describe what I mean
+
+![hogGodZilla.png](docs/imgs/hogGodZilla.png)
+
+As you can see the arrows on the image are pointing to where the intensity 
+either increases or decreases (i don't know whih one) but the arrow would 
+be where the "oriented" comes from and the direction of intencity would 
+be where the "gradient" comes from. 
+
+I belive all of this means whatever hog is doing, it relates to finding 
+the edges of objects in an image. If we know the edges we can make out 
+shapes?
+
+A big question I have is, how does the model know it's being trained 
+on a hog dataset rather than the other standard formats of data?
