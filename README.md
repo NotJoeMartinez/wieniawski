@@ -1,6 +1,7 @@
 # Wieniawski
 
 Experimental refactor of [Mozart](https://github.com/aashrafh/Mozart) optical music recognition models.
+See music [MusicNotesML](https://github.com/NotJoeMartinez/MusicNotesML) for a proof of concept. 
 
 ### Training data
 
