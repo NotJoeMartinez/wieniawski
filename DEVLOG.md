@@ -94,3 +94,16 @@ shapes?
 
 A big question I have is, how does the model know it's being trained 
 on a hog dataset rather than the other standard formats of data?
+
+
+## 2024-03-14T02-20-01Z
+
+There are `102` directories in the training data I have downloaded, 
+There are `241` directories in the dataset posted on google drive.
+That means I'm missing `139` feature labels and `57%` of the dataset.
+
+
+
+
+
+- [Training Data](https://drive.google.com/drive/u/0/folders/1OVGA3CGnEKjyg_k_L8MP2RO5R3oDIbHE)

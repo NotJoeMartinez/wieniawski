@@ -126,9 +126,12 @@ def load_classifiers():
         'KNN': KNeighborsClassifier(n_neighbors=7),
         'NN': MLPClassifier(activation='relu', 
                             hidden_layer_sizes=(200,),
-                            max_iter=10000, alpha=1e-4,
-                            solver='adam', verbose=20,
-                            tol=1e-8, random_state=1,
+                            max_iter=10000, 
+                            alpha=1e-4,
+                            solver='adam', 
+                            verbose=20,
+                            tol=1e-8, 
+                            random_state=1,
                             learning_rate_init=.0001,
                             learning_rate='adaptive')
     }

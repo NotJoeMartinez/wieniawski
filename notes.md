@@ -96,11 +96,12 @@ LBFGS or stochastic gradient descent.
 
 - https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html
 - https://dasha.ai/en-us/blog/log-loss-function
-
+- https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning
 
 ### `svm.LinearSVC` 
 - Linear Support Vector Classification.
 - https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html
+https://www.csie.ntu.edu.tw/~cjlin/papers/libsvm.pdf
 
 
 ### `model.fit()`
