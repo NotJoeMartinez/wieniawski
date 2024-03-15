@@ -30,20 +30,13 @@ def train(model_name):
 
 @cli.command()
 @click.option("--path", "-p", help="Path to the file or directory")
-# @click.option("--directory", "-d", help="Path to the directory")
-def predict(path):
+@click.option("--model", "-m", required=False, help="Path to the model")
+def predict(path, model):
 
     # from .get_predictions import predict_dir, predict_file
 
-    # if file is None and directory is None:
-        # print("Please specify either file or directory")
-        # exit(1)
-    
     from .get_predictions import predict_file
 
     if path is not None:
-        predict_file(path, os.getenv("TEST_OUTPUT_DIR"))
+        predict_file(path, os.getenv("TEST_OUTPUT_DIR"), model)
     
-    # if directory is not None:
-    #     predict_dir(directory, os.getenv("TEST_OUTPUT_DIR"))
-

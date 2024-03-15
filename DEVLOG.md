@@ -102,8 +102,20 @@ There are `102` directories in the training data I have downloaded,
 There are `241` directories in the dataset posted on google drive.
 That means I'm missing `139` feature labels and `57%` of the dataset.
 
-
-
-
-
 - [Training Data](https://drive.google.com/drive/u/0/folders/1OVGA3CGnEKjyg_k_L8MP2RO5R3oDIbHE)
+
+## 2024-03-15T06-46-40Z
+The traing data is either over fit, improperly labeld or something else.
+The model trained with the full dataset don't work... 
+
+
+```python
+black_names = ['4', '8', '8_b_n', '8_b_r', '16', '16_b_n', '16_b_r',
+                '32', '32_b_n', '32_b_r', 'a_4', 'a_4_075', 'a_8', 'a_16', 'a_32', 'chord']
+
+# or
+black_names = os.listdir('data/training_data/')
+```
+
+The model will work if I properly include all of the `blacknotes` labels from the 
+directories. 
