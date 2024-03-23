@@ -21,7 +21,6 @@ def predict(img, model_path=None):
     model = pickle.load(open(model_file, 'rb'))
 
     features = extract_features(img, 'hog')
-    print(features)
     labels = model.predict([features])
 
     return labels

@@ -38,7 +38,7 @@ def extract_hsv_histogram(img):
 
 
 def extract_hog_features(img):
-    print(f"extract_hog_features: img.shape: {img.shape} ")
+    # print(f"extract_hog_features: img.shape: {img.shape} ")
     img = cv2.resize(img, target_img_size)
     win_size = (100, 100)
     cell_size = (4, 4)
@@ -109,6 +109,11 @@ def load_dataset(feature_set='raw', dir_names=[]):
         for i in subset:
             img = cv2.imread(imgs[i])
             labels.append(dir_name)
+
+            if img is None:
+                print(f'Error loading {imgs[i]}')
+                continue
+
             features.append(extract_features(img, feature_set))
 
     print(f'Total: {len(dir_names)} directories, and {count} images')
