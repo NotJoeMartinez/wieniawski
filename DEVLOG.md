@@ -9,17 +9,6 @@ When I train my model using the whole dataset nothing matches. The directories a
 None of the directories in the published dataset are in `blacknames`.
 But there are similar labels usually named with `label_[number]` for example 
 there is no `4` directory but there is 
-```txt
-4_009
-4_010
-4_011
-4_012
-```
-lets list them all
-
-```
-
-```
 
 
 

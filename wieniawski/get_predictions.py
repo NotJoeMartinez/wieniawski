@@ -148,8 +148,18 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
         primitives, prim_with_staff, boundary = get_connected_components(
             img, imgs_with_staff[i])
 
+        
+        # show_images(imgs_with_staff[i], ['imgs_with_staff[i]'])
+        # show_images(primitives, ['primitives'])
+        # show_images(prim_with_staff, ['prim_with_staff'])
+
+        # detected = cv2.cvtColor(np.array(255*img.copy()).astype(np.uint8),cv2.COLOR_GRAY2RGB)
+        detected = cv2.cvtColor(np.array(255*imgs_with_staff[i].copy()).astype(np.uint8),cv2.COLOR_GRAY2RGB)
+
+
 
         for j, prim in enumerate(primitives):
+            minr, minc, maxr, maxc = boundary[j]
 
             prim = binary_opening(prim, square(
                 np.abs(most_common-imgs_spacing[i])))
@@ -160,6 +170,10 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
             print(f"Predicted labels: {labels}")
             octave = None
             label = labels[0]
+
+            cv2.rectangle(detected, (minc, minr), (maxc, maxr), (0, 0, 255), 2)
+            cv2.putText(detected, label, (minc-2, minr-2), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+
        
             # means we have a valid note, prev is the sharp or flat stuff
             if label in black_names:
@@ -263,6 +277,15 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
 
     if len(coord_imgs) > 1:
         out_file.write("}")
+
+
+    # overlay detected notes on original image
+
+
+    show_images([detected], ['Detected'])
+    # cv2.imwrite(f'detected_{i}.png', detected)
+    # show_images([overlay], ['Overlay'])
+
 
     plt.imshow(og_img)
     plt.title(f"Predicted labels: {res}")
