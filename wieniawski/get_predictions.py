@@ -116,6 +116,12 @@ def get_chord_notation(chord_list):
     
     - black_names: is a list of strings that correspond to the names of the notes
 
+    - primitives: 
+        images detected by the connected components algorithm
+    - prim_with_staff:
+        images detected by the connected components algorithm with staff lines
+    
+
 
 """
  
@@ -126,7 +132,6 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
                    '32', '32_b_n', '32_b_r', 'a_4', 'a_8', 'a_16', 'a_32', 'chord']
 
 
-    # black_names = os.listdir('data/training_data/')
 
     ring_names = ['2', 'a_2']
     whole_names = ['1', 'a_1']
@@ -139,7 +144,7 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
 
 
     all_labels = []
-
+    labeled_imgs = []
     for i, img in enumerate(coord_imgs):
         res = []
         prev = ''
@@ -149,13 +154,8 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
             img, imgs_with_staff[i])
 
         
-        # show_images(imgs_with_staff[i], ['imgs_with_staff[i]'])
-        # show_images(primitives, ['primitives'])
-        # show_images(prim_with_staff, ['prim_with_staff'])
 
-        # detected = cv2.cvtColor(np.array(255*img.copy()).astype(np.uint8),cv2.COLOR_GRAY2RGB)
         detected = cv2.cvtColor(np.array(255*imgs_with_staff[i].copy()).astype(np.uint8),cv2.COLOR_GRAY2RGB)
-
 
 
         for j, prim in enumerate(primitives):
@@ -171,10 +171,8 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
             octave = None
             label = labels[0]
 
-            cv2.rectangle(detected, (minc, minr), (maxc, maxr), (0, 0, 255), 2)
-            cv2.putText(detected, label, (minc-2, minr-2), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-
        
+            cv2.rectangle(detected, (minc, minr), (maxc, maxr), (0, 0, 255), 2)
             # means we have a valid note, prev is the sharp or flat stuff
             if label in black_names:
 
@@ -196,21 +194,25 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
                     for k in range(len(bounds)):
                         idx, p = estim(
                             boundary[j][0]+bounds[k][2], i, imgs_spacing, imgs_rows)
-                        l_res.append(f'{label_map[idx][p]}/4')
 
+                        l_res.append(f'{label_map[idx][p]}/4')
                         if k+1 < len(bounds) and (bounds[k][2]-bounds[k+1][2]) > 1.5*imgs_spacing[i]:
 
                             idx, p = estim(
                                 boundary[j][0]+bounds[k][2]-imgs_spacing[i]/2, i, imgs_spacing, imgs_rows)
                             l_res.append(f'{label_map[idx][p]}/4')
 
+                    
+                    cv2.putText(detected, str(l_res), (minc-2, minr-2), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
                     res.append(sorted(l_res))
                 else:
                     for bbox in bounds:
                         c = bbox[2]+boundary[j][0]
                         line_idx, p = estim(int(c), i, imgs_spacing, imgs_rows)
                         l = label_map[line_idx][p]
-                        res.append(get_note_name(prev, l, label))
+                        note_name = get_note_name(prev, l, label)
+                        cv2.putText(detected, note_name, (minc-2, minr-2), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+                        res.append(note_name)
 
             elif label in ring_names:
                 head_img = 1-binary_fill_holes(1-prim)
@@ -221,13 +223,17 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
                     c = bbox[2]+boundary[j][0]
                     line_idx, p = estim(int(c), i, imgs_spacing, imgs_rows)
                     l = label_map[line_idx][p]
-                    res.append(get_note_name(prev, l, label))
+                    note_name = get_note_name(prev, l, label)
+                    cv2.putText(detected, note_name, (minc-2, minr-2), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+                    res.append(note_name)
 
             elif label in whole_names:
                 c = boundary[j][2]
                 line_idx, p = estim(int(c), i, imgs_spacing, imgs_rows)
                 l = label_map[line_idx][p]
-                res.append(get_note_name(prev, l, label))
+                note_name = get_note_name(prev, l, label)
+                cv2.putText(detected, note_name, (minc-2, minr-2), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+                res.append(note_name)
 
             elif label in ['bar', 'bar_b', 'clef', 'clef_b', 'natural', 'natural_b', 't24', 't24_b', 't44', 't44_b'] or label in []:
                 continue
@@ -261,41 +267,59 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
 
             if label not in ['flat', 'flat_b', 'cross', '#', '#_b']:
                 prev = ''
+            
+            show_images([detected], [label])
 
-            all_labels.append(res)
-          
-
-        if len(time_name) == 2:
-            out_file.write("[ " + "\\" + "meter<\"" + str(time_name[0]) + "/" + str(time_name[1])+"\">" + ' '.join(
-                [str(elem) if type(elem) != list else get_chord_notation(elem) for elem in res]) + "]\n")
-        elif len(time_name) == 1:
-            out_file.write("[ " + "\\" + "meter<\"" + '4' + "/" + '2' + "\">" + ' '.join(
-                [str(elem) if type(elem) != list else get_chord_notation(elem) for elem in res]) + "]\n")
-        else:
-            out_file.write("[ " + ' '.join(
-                [str(elem) if type(elem) != list else get_chord_notation(elem) for elem in res]) + "]\n")
+        write_predictions(out_file, res, time_name)
+        
+        labeled_imgs.append(detected)
 
     if len(coord_imgs) > 1:
         out_file.write("}")
 
 
-    # overlay detected notes on original image
+    for i, img in enumerate(coord_imgs):
+        plt.imshow(labeled_imgs[i])
+        plt.title(f"Predicted labels: {res}")
+        plt.show()
+
+    # show_images(labeld_imgs, ['1', '2', '3'])
+    # show_images([detected], ['Detected'])
+    # cv2.imwrite('detected.png', detected)
+    # plt.imshow(og_img)
+    # plt.title(f"Predicted labels: {res}")
+    # plt.show()
 
 
-    show_images([detected], ['Detected'])
-    # cv2.imwrite(f'detected_{i}.png', detected)
-    # show_images([overlay], ['Overlay'])
-
-
-    plt.imshow(og_img)
-    plt.title(f"Predicted labels: {res}")
-    plt.show()
-
+    print(f"wrote predictions to {out_file}")
     print("###########################", all_labels, "##########################")
 
 
+def write_predictions(out_file, res, time_name):
+    def format_elements(elements):
+        formatted_elements = []
+        for elem in elements:
+            if type(elem) != list:
+                formatted_elements.append(str(elem))
+            else:
+                formatted_elements.append(get_chord_notation(elem))
+        return ' '.join(formatted_elements)
+
+    if len(time_name) == 2:
+        out_file.write("[ " + "\\" + "meter<\"" + str(time_name[0]) + "/" + str(time_name[1]) + "\">" + format_elements(res) + "]\n")
+    elif len(time_name) == 1:
+        out_file.write("[ " + "\\" + "meter<\"" + '4' + "/" + '2' + "\">" + format_elements(res) + "]\n")
+    else:
+        out_file.write("[ " + format_elements(res) + "]\n")
+
+    print(f"Writing predictions: {res}")
 
 def predict_file(input_path, output_path, model_path=None):
+    import warnings
+    from sklearn.exceptions import ConvergenceWarning
+    warnings.filterwarnings("ignore", category=ConvergenceWarning)
+    warnings.filterwarnings("ignore", category=UserWarning)
+
     img_name = input_path.split('/')[-1].split('.')[0]
     out_file = open(f'{output_path}/{img_name}.txt', "w")
 

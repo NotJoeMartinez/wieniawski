@@ -11,7 +11,25 @@ But there are similar labels usually named with `label_[number]` for example
 there is no `4` directory but there is 
 
 
+predctions on `04.PNG`:
+`cd_1.sav`  
+```
+[ c1/2 d1/4 e1/4 f1/4 g1/4 a1/4 b1/4 c2/4 d2/4 e2/4 f2/4 g2/4 a2/4 b2/4 f1/8 f1/8]
+Processing new image data/testing_data/04.PNG...
+most common:  20
+Writing predictions: ['c1/2', 'd1/4', 'e1/4', 'f1/4', 'g1/4', 'a1/4', 'b1/4', 'c2/4', 'd2/4', 'e2/4', 'f2/4', 'g2/4', 'a2/4', 'b2/4', 'f1/8', 'f1/8']
+```
 
+
+`og.sav`
+```
+[ c1/4 d1/4 e1/4 f1/4 g1/4 a1/4 b1/4 c2/4 d2/4 e2/4 f2/4 g2/4 a2/4 b2/4]
+Processing new image data/testing_data/04.PNG...
+Writing predictions: ['c1/4', 'd1/4', 'e1/4', 'f1/4', 'g1/4', 'a1/4', 'b1/4', 'c2/4', 'd2/4', 'e2/4', 'f2/4', 'g2/4', 'a2/4', 'b2/4']
+```
+
+
+- https://brebru.com/violin/2oct/cmaj2.html
 
 
 ## 2024-03-15T06-46-40Z
