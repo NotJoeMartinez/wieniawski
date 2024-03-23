@@ -236,6 +236,7 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
                 res.append(note_name)
 
             elif label in ['bar', 'bar_b', 'clef', 'clef_b', 'natural', 'natural_b', 't24', 't24_b', 't44', 't44_b'] or label in []:
+                print(f"bar?: {label}")
                 continue
 
             elif label in ['#', '#_b']:
@@ -268,7 +269,7 @@ def recognize(out_file, most_common, coord_imgs, imgs_with_staff,
             if label not in ['flat', 'flat_b', 'cross', '#', '#_b']:
                 prev = ''
             
-            show_images([detected], [label])
+            # show_images([detected], [label])
 
         write_predictions(out_file, res, time_name)
         

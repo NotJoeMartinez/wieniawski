@@ -29,7 +29,10 @@ Writing predictions: ['c1/4', 'd1/4', 'e1/4', 'f1/4', 'g1/4', 'a1/4', 'b1/4', 'c
 ```
 
 
+The problem seems to be with detecting bars
+
 - https://brebru.com/violin/2oct/cmaj2.html
+
 
 
 ## 2024-03-15T06-46-40Z

@@ -1,6 +1,6 @@
 import os
 def main():
-    dataset_path = "../data/no_dupes"
+    dataset_path = "../data/training_datasets/manual_pick"
 
     labels = os.listdir(dataset_path)
 
